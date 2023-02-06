@@ -10,11 +10,11 @@
     
     <?php
         
-        require './partials/_header.phtml';
+        require 'partials/_header.phtml';
+    
+        require $template."/".$template.".phtml";
         
-        require './../pages/{$template}.php';
-        
-        require './partials/_footer.phtml';
+        require 'partials/_footer.phtml';
         
     ?>
         

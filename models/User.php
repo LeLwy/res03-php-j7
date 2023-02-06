@@ -2,13 +2,13 @@
 
 class User{
     
-    private int $id;
+    private ?int $id;
     private string $first_name;
     private string $last_name;
     private string $email;
     private string $password;
     
-    public function construct(string $firstname,string $last_name,string $email,string $password){
+    public function __construct(string $first_name,string $last_name,string $email,string $password){
         
         $this->id = null;
         $this->first_name = $first_name;
@@ -18,12 +18,12 @@ class User{
         
     }
     
-        public function getId() : int
+        public function getId() : ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id) : int
+    public function setId(int $id) : void
     {
         $this->id = $id;
     }

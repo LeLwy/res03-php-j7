@@ -1,5 +1,7 @@
 <?php
 
+require 'models/User.php';
+
 $host = "db.3wa.io";
 $port = "3306";
 $dbname = "louischancioux_phpj7";
@@ -15,7 +17,7 @@ $db = new PDO(
     array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
 );
 
-function loadUser(string $email) : User
+function loadUser(string $email, PDO $db) : ?User
 {
     
     $query = $db->prepare('SELECT * FROM users WHERE email = :email');
@@ -28,16 +30,25 @@ function loadUser(string $email) : User
     
     $user = $query->fetch(PDO::FETCH_ASSOC);
     
-    $loggedUser = new User($user['first_name'], $user['last_name'], $user['email'], $user['password']);
-    $loggedUser->setId($user['id']);
+    if($user === false){
+        
+        return null;
+        
+    }else{
+        
+        $loggedUser = new User($user['first_name'], $user['last_name'], $user['email'], $user['password']);
+        $loggedUser->setId($user['id']);
+        
+        
+        return $loggedUser;
+    }
     
-    return $loggedUser;
 }
 
-function saveUser(User $user) : User
+function saveUser(User $user, PDO $db) : User
 {
     
-    $query = $db->prepare('INSERT INTO users VALUES(null, :first_name, :last_name, :password)');
+    $query = $db->prepare('INSERT INTO users VALUES(NULL, :first_name, :last_name, :email, :password)');
 
     $parameters = [
     'first_name' => $user->getFirstName(),
@@ -48,5 +59,5 @@ function saveUser(User $user) : User
 
     $query->execute($parameters);
     
-    return loadUser($user->getEmail());
+    return loadUser($user->getEmail(), $db);
 }
